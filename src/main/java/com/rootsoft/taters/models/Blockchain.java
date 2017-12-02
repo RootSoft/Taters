@@ -2,8 +2,7 @@ package com.rootsoft.taters.models;
 
 import com.rootsoft.taters.models.block.Block;
 import com.rootsoft.taters.models.block.GenesisBlock;
-
-import java.util.LinkedList;
+import com.rootsoft.taters.repositories.BlockRepository;
 
 public class Blockchain {
 
@@ -11,33 +10,32 @@ public class Blockchain {
     public static final String TAG = Blockchain.class.getSimpleName();
 
     //Properties
-    private LinkedList<Block> chain;
+    private BlockRepository repository;
 
     //Constructors
-    public Blockchain() {
-        chain = new LinkedList<>();
-        chain.add(new GenesisBlock());
+    public Blockchain(BlockRepository repository) {
+        this.repository = repository;
     }
 
     //Methods
 
     public Block getGenesisBlock() {
-        return chain.peekLast();
+        return repository.getGenesisBlock();
     }
 
     public Block getLastBlock() {
-        return chain.peekFirst();
+        return repository.getLastBlock();
     }
 
     public void addBlock(Block block) {
         block.setPreviousHash(getLastBlock().getHash());
         block.setHash(block.calculateHash());
-        chain.push(block);
+        repository.addBlock(block);
     }
 
     @Override
     public String toString() {
-        return "Blockchain{" + chain + '}';
+        return "Blockchain{" + repository + '}';
     }
 
 }

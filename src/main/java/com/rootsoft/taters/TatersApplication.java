@@ -2,6 +2,7 @@ package com.rootsoft.taters;
 
 import com.rootsoft.taters.models.Blockchain;
 import com.rootsoft.taters.models.block.Block;
+import com.rootsoft.taters.repositories.BlockListRepository;
 import org.joda.time.DateTime;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +14,7 @@ public class TatersApplication {
 		SpringApplication.run(TatersApplication.class, args);
 		System.out.println("Spring started!");
 
-        Blockchain blockchain = new Blockchain();
+        Blockchain blockchain = new Blockchain(new BlockListRepository());
         Block block = new Block(1, new DateTime().getMillis(), "Second block");
         Block block2 = new Block(2, new DateTime().getMillis(), "Third block");
         blockchain.addBlock(block);
