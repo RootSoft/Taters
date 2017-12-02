@@ -3,7 +3,7 @@ package com.rootsoft.taters.repositories;
 import com.rootsoft.taters.models.block.Block;
 import com.rootsoft.taters.models.block.GenesisBlock;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class BlockListRepository implements BlockRepository {
 
@@ -11,27 +11,37 @@ public class BlockListRepository implements BlockRepository {
     public static final String TAG = BlockListRepository.class.getSimpleName();
 
     //Properties
-    private LinkedList<Block> chain;
+    private ArrayList<Block> chain;
 
     //Constructors
     public BlockListRepository() {
-        chain = new LinkedList<>();
+        chain = new ArrayList<>();
         chain.add(new GenesisBlock());
     }
 
     @Override
     public void addBlock(Block block) {
-        chain.push(block);
+        chain.add(block);
     }
 
     @Override
     public Block getLastBlock() {
-        return chain.peekFirst();
+        return chain.get(chain.size()-1);
     }
 
     @Override
     public Block getGenesisBlock() {
-        return chain.peekLast();
+        return chain.get(0);
+    }
+
+    @Override
+    public Block getBlock(int position) {
+        return chain.get(position);
+    }
+
+    @Override
+    public int getSize() {
+        return chain.size();
     }
 
     @Override

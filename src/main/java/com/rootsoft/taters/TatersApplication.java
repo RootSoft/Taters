@@ -20,6 +20,8 @@ public class TatersApplication {
         blockchain.addBlock(block);
         blockchain.addBlock(block2);
 
+        System.out.println("Is blockchain valid: " + blockchain.isChainValid());
+
         System.out.println(blockchain.toString());
 
 
