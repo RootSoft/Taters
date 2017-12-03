@@ -13,12 +13,17 @@ public class Block {
     private String data;
     private String hash, previousHash;
 
+    //The "nonce" in is a 32-bit (4-byte) field whose value is set
+    //so that the hash of the block will contain a run of leading zeros.
+    private int nonce;
+
     //Constructors
     public Block(int index, long timestamp, String data) {
         this.index = index;
         this.timestamp = timestamp;
         this.data = data;
         this.previousHash = "";
+        this.nonce = 0;
 
         hash = calculateHash();
     }
@@ -28,24 +33,12 @@ public class Block {
         return index;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
     public long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public String getData() {
         return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
     }
 
     public String getHash() {
@@ -64,9 +57,17 @@ public class Block {
         this.previousHash = previousHash;
     }
 
+    public int getNonce() {
+        return nonce;
+    }
+
+    public void setNonce(int nonce) {
+        this.nonce = nonce;
+    }
+
     //Methods
     public String calculateHash() {
-        return DigestUtils.sha256Hex(index + previousHash + timestamp + data);
+        return DigestUtils.sha256Hex(index + previousHash + timestamp + data + nonce);
     }
 
     @Override
