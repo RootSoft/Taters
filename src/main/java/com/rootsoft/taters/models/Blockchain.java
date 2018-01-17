@@ -2,8 +2,7 @@ package com.rootsoft.taters.models;
 
 import com.rootsoft.taters.models.block.Block;
 import com.rootsoft.taters.models.consensus.Consensus;
-import com.rootsoft.taters.models.consensus.ProofOfWork;
-import com.rootsoft.taters.repositories.BlockRepository;
+import com.rootsoft.taters.repositories.block.BlockRepository;
 
 public class Blockchain {
 
@@ -12,10 +11,10 @@ public class Blockchain {
 
     //Properties
     private BlockRepository repository;
-    private ProofOfWork consensus;
+    private Consensus consensus;
 
     //Constructors
-    public Blockchain(BlockRepository repository, ProofOfWork consensus) {
+    public Blockchain(BlockRepository repository, Consensus consensus) {
         this.repository = repository;
         this.consensus = consensus;
     }
@@ -30,7 +29,7 @@ public class Blockchain {
         return repository.getLastBlock();
     }
 
-    public void addBlock(Block block) {
+    public void createBlock(Block block) {
         block.setPreviousHash(getLastBlock().getHash());
         consensus.execute(block);
         repository.addBlock(block);

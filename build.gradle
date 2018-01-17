@@ -4,6 +4,9 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
+		maven {
+			url "http://repo.hive2hive.org"
+		}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -20,6 +23,11 @@ sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
+	maven { url "http://repo.spring.io/libs-snapshot" }
+	maven { url "http://tomp2p.net/dev/mvn" }
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 
@@ -27,9 +35,15 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+
 	//JodaTime
 	compile "joda-time:joda-time:2.2"
 
 	//Commons Codec
 	compile 'commons-codec:commons-codec:1.11'
+
+	//P2P
+	compile("net.tomp2p:tomp2p-all:5.0-Beta8")
+
 }

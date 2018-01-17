@@ -1,4 +1,4 @@
-package com.rootsoft.taters.repositories;
+package com.rootsoft.taters.repositories.block;
 
 import com.rootsoft.taters.models.block.Block;
 

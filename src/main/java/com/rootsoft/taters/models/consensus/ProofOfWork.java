@@ -29,12 +29,18 @@ public class ProofOfWork implements Consensus {
         this.difficulty = difficulty;
     }
 
+    @Override
+    public boolean validate() {
+        return true;
+    }
+
     /**
      * The goal is to find a hash below a target number which is calculated based on the difficulty.
      * Proof of work in Bitcoin's mining takes an input consists of Merkle Root, timestamp, previous block hash
      * plus a nonce which is completely random number.
      *
      * TODO Should be run on a thread
+     * TODO Rework for Merkle root
      */
     @Override
     public void execute(Block block) {

@@ -8,5 +8,15 @@ import com.rootsoft.taters.models.block.Block;
  * - it keeps powerful adversaries from derailing the system and successfully forking the chain.
  */
 public interface Consensus {
+
+    /**
+     * Validates that the next block in a blockchain is the one and only version of the truth.
+     */
+    boolean validate();
+
+    /**
+     * Executes the algoritm
+     */
     void execute(Block block);
+
 }
