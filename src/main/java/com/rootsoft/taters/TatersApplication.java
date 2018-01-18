@@ -4,14 +4,9 @@ import com.rootsoft.taters.models.Blockchain;
 import com.rootsoft.taters.models.PeerNetwork;
 import com.rootsoft.taters.models.consensus.ProofOfWork;
 import com.rootsoft.taters.models.ConnectionCallback;
-import com.rootsoft.taters.models.node.BasicNodeEventCallback;
 import com.rootsoft.taters.models.node.Node;
-import com.rootsoft.taters.models.node.NodeEventCallback;
 import com.rootsoft.taters.repositories.block.BlockListRepository;
 import com.rootsoft.taters.utils.NodeHelper;
-import net.tomp2p.peers.Number160;
-import net.tomp2p.peers.PeerAddress;
-import net.tomp2p.storage.Data;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -44,12 +39,12 @@ public class TatersApplication {
         network = new PeerNetwork(connectionCallback);
 
         //Create our nodes
-        Node node = NodeHelper.createNode("Initial node");
-        Node second = NodeHelper.createNode("Second node");
+        Node node = NodeHelper.createFullNode("Initial node");
+        Node second = NodeHelper.createFullNode("Second node");
 
         //Let the new nodes join the network
         network.join(node);
-        network.join(second);
+        //network.join(second);
 
     }
 
@@ -58,7 +53,6 @@ public class TatersApplication {
         @Override
         public void onConnected(Node node) {
             System.out.println("Peer " + node.getName() + " (" + node.getPeer().peerID() + ") joined the network.");
-            node.send("GET_BLOCKCHAIN", "I want your blockchain");
         }
 
         @Override

@@ -1,10 +1,13 @@
 package com.rootsoft.taters.models.node;
 
+import com.rootsoft.taters.models.commands.ProtocolCommand;
+import com.rootsoft.taters.models.protocols.ProtocolFactory;
+import com.rootsoft.taters.models.protocols.ProtocolMessage;
 import net.tomp2p.dht.*;
-import net.tomp2p.futures.BaseFuture;
 import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.p2p.PeerBuilder;
+import net.tomp2p.p2p.RequestP2PConfiguration;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.rpc.ObjectDataReply;
@@ -18,7 +21,7 @@ import java.util.Random;
 /**
  * https://tomp2p.net/doc/quick/
  */
-public class Node {
+public abstract class Node {
 
     //Constants
     public static final String TAG = Node.class.getSimpleName();
@@ -75,86 +78,38 @@ public class Node {
         if (peer == null)
             return;
 
-        peer.peer().objectDataReply(callback::onMessageReceived);
+        peer.peer().objectDataReply((sender, request) -> callback.onMessageReceived(sender, (ProtocolMessage) request));
     }
 
     //Methods
 
     /**
-     * Sends a message on the network with the given key and message.
+     * Sends a protocol message on the network.
      *
-     * @param key The unique key for the message
      * @param message A message to be sent
      */
-    public void send(final String key, String message) {
-        FutureSend futureSend = peer.send(Number160.createHash(key)).object(message).start();
+    public void sendProtocolMessage(ProtocolMessage message) {
+        FutureSend futureSend = peer.send(Number160.createHash("key"))
+                .object(message) //TODO Serialize the message using GSON
+                .requestP2PConfiguration(new RequestP2PConfiguration(1, 5, 0))
+                .start();
+
         futureSend.addListener(new BaseFutureAdapter<FutureSend>() {
             @Override
             public void operationComplete(FutureSend future) throws Exception {
+                callback.onMessageSent(message);
+
                 if (!future.isCompleted()) {
                     callback.onError(400, "Unable to send message");
                 }
 
-                callback.onMessageSent(key);
-            }
-        });
-
-    }
-
-    public void broadcast() {
-
-    }
-
-    /**
-     * Put data on the P2P network.
-     *
-     * @param data The data to be put
-     * @param key  The key on the network
-     */
-    public void putData(String data, Number160 key) {
-
-        try {
-            FuturePut futurePut = peer.put(key).data(new Data(data)).start();
-            futurePut.addListener(new BaseFutureAdapter<FuturePut>() {
-
-                @Override
-                public void operationComplete(FuturePut future) throws Exception {
-                    if (!future.isCompleted()) {
-                        callback.onError(400, "Unable to send message");
-                    }
-
-                    callback.onDataPut(key);
+                for (Object object : futureSend.rawDirectData2().values()) {
+                    callback.onResponseReceived((ProtocolMessage) object);
                 }
 
-            });
-        } catch (IOException e) {
-            callback.onError(400, "Unable to put data on network");
-        }
-    }
-
-    /**
-     * Retrieves data with the given key from the network.
-     *
-     * @param key
-     */
-    public void getData(Number160 key) {
-        FutureGet futureGet = peer.get(key).start();
-        futureGet.addListener(new BaseFutureAdapter<FutureGet>() {
-            @Override
-            public void operationComplete(FutureGet future) throws Exception {
-                if (!future.isSuccess())
-                    return;
-
-                if (future.data() == null)
-                    return;
-
-                if (callback == null)
-                    return;
-
-                callback.onDataReceived(key, futureGet.data());
-
             }
         });
+
     }
 
     /**

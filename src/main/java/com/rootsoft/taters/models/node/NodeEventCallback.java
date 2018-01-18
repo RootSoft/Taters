@@ -1,5 +1,6 @@
 package com.rootsoft.taters.models.node;
 
+import com.rootsoft.taters.models.protocols.ProtocolMessage;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.storage.Data;
@@ -8,32 +9,24 @@ public interface NodeEventCallback {
 
     /**
      * Callback when a message was sent successfully to the peers.
-     * @param key The key of the message
+     * @param message The protocol message
      */
-    void onMessageSent(String key);
+    void onMessageSent(ProtocolMessage message);
 
     /**
      * Callback when a message was received from another peer.
      * We can return an object as a reply to the sender
      */
-    Object onMessageReceived(PeerAddress sender, Object message);
+    ProtocolMessage onMessageReceived(PeerAddress sender, ProtocolMessage message);
 
     /**
-     * Callback when data was successfully put on the network.
-     * @param key
+     * Callback when a response was sent from a peer for your given request.
      */
-    void onDataPut(Number160 key);
-
-    /**
-     * Callback when data was fetched from the network.
-     * @param sender
-     * @param key
-     * @param data
-     */
-    void onDataReceived(Number160 key, Data data);
+    void onResponseReceived(ProtocolMessage message);
 
     /**
      * Callback when an error occured on the network.
      */
     void onError(int errorCode, String errorMessage);
+
 }

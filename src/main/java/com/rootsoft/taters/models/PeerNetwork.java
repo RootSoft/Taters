@@ -3,6 +3,7 @@ package com.rootsoft.taters.models;
 
 import com.rootsoft.taters.models.node.BootstrapNode;
 import com.rootsoft.taters.models.node.Node;
+import com.rootsoft.taters.models.protocols.VersionMessage;
 import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureBootstrap;
 
@@ -54,6 +55,10 @@ public class PeerNetwork {
 
                 node.setConnected(true);
                 nodes.add(node);
+
+                //Send a protocol message Version that contains various fields
+                node.sendProtocolMessage(new VersionMessage(1, 0)); //TODO Get version code and blockcount
+
                 callback.onConnected(node);
             }
         });
