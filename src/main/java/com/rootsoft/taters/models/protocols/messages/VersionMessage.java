@@ -1,4 +1,6 @@
-package com.rootsoft.taters.models.protocols;
+package com.rootsoft.taters.models.protocols.messages;
+
+import com.rootsoft.taters.models.protocols.ProtocolType;
 
 /**
  * This should be the first message that a node sends out to the network.
@@ -8,7 +10,6 @@ public class VersionMessage extends ProtocolMessage {
 
     //Constants
     public static final String TAG = VersionMessage.class.getSimpleName();
-    public static final String TYPE = "VERSION";
 
     //Attributes
     private int versionCode;
@@ -16,7 +17,7 @@ public class VersionMessage extends ProtocolMessage {
 
     //Constructors
     public VersionMessage(int versionCode, int blockCount) {
-        super(TYPE);
+        super(ProtocolType.VERSION);
         this.versionCode = versionCode;
         this.blockCount = blockCount;
     }

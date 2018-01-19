@@ -1,14 +1,11 @@
 package com.rootsoft.taters.utils;
 
-import com.rootsoft.taters.models.commands.ProtocolCommand;
 import com.rootsoft.taters.models.node.FullNode;
 import com.rootsoft.taters.models.node.Node;
 import com.rootsoft.taters.models.node.NodeEventCallback;
-import com.rootsoft.taters.models.protocols.ProtocolFactory;
-import com.rootsoft.taters.models.protocols.ProtocolMessage;
-import net.tomp2p.peers.Number160;
+import com.rootsoft.taters.models.protocols.ProtocolExecutor;
+import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
 import net.tomp2p.peers.PeerAddress;
-import net.tomp2p.storage.Data;
 
 public class NodeHelper {
 
@@ -28,7 +25,8 @@ public class NodeHelper {
 
             @Override
             public void onResponseReceived(ProtocolMessage message) {
-                ProtocolFactory.createProtocol(message).execute();
+                ProtocolExecutor executor = new ProtocolExecutor();
+                executor.resolveProtocolMessage(message);
             }
 
             @Override

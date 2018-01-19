@@ -3,7 +3,7 @@ package com.rootsoft.taters.models;
 
 import com.rootsoft.taters.models.node.BootstrapNode;
 import com.rootsoft.taters.models.node.Node;
-import com.rootsoft.taters.models.protocols.VersionMessage;
+import com.rootsoft.taters.models.protocols.messages.VersionMessage;
 import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureBootstrap;
 

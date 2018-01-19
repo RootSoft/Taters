@@ -1,8 +1,7 @@
 package com.rootsoft.taters.models.node;
 
-import com.rootsoft.taters.models.commands.ProtocolCommand;
-import com.rootsoft.taters.models.protocols.ProtocolFactory;
-import com.rootsoft.taters.models.protocols.ProtocolMessage;
+import com.rootsoft.taters.models.protocols.ProtocolExecutor;
+import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
 import net.tomp2p.peers.PeerAddress;
 
 /**
@@ -29,15 +28,14 @@ public class BootstrapNode extends Node {
             public ProtocolMessage onMessageReceived(PeerAddress sender, ProtocolMessage message) {
                 System.out.println("I'm bootstrapnode and I just got the message [" + message
                         + "] from " + sender.peerId());
-
-               ProtocolCommand command = ProtocolFactory.createProtocol(message);
-               command.execute();
-               return command.response();
+                ProtocolExecutor executor = new ProtocolExecutor();
+                return executor.resolveProtocolMessage(message);
             }
 
             @Override
             public void onResponseReceived(ProtocolMessage message) {
-                ProtocolFactory.createProtocol(message).execute();
+                ProtocolExecutor executor = new ProtocolExecutor();
+                executor.resolveProtocolMessage(message);
             }
 
             @Override
@@ -46,6 +44,7 @@ public class BootstrapNode extends Node {
             }
 
         });
+
     }
 
     public BootstrapNode(String name, NodeEventCallback callback) {

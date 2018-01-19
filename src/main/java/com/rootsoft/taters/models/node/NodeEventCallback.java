@@ -1,9 +1,7 @@
 package com.rootsoft.taters.models.node;
 
-import com.rootsoft.taters.models.protocols.ProtocolMessage;
-import net.tomp2p.peers.Number160;
+import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
 import net.tomp2p.peers.PeerAddress;
-import net.tomp2p.storage.Data;
 
 public interface NodeEventCallback {
 

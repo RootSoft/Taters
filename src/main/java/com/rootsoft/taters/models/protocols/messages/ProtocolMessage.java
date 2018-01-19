@@ -1,9 +1,11 @@
-package com.rootsoft.taters.models.protocols;
+package com.rootsoft.taters.models.protocols.messages;
+
+import com.rootsoft.taters.models.protocols.ProtocolType;
 
 import java.io.Serializable;
 
 /**
- * A Protocol Message is a message
+ * A Protocol Message is a message to be sent on the P2P network.
  */
 public abstract class ProtocolMessage implements Serializable {
 
@@ -11,15 +13,15 @@ public abstract class ProtocolMessage implements Serializable {
     public static final String TAG = ProtocolMessage.class.getSimpleName();
 
     //Attributes
-    private String type;
+    private ProtocolType type;
 
     //Constructors
-    public ProtocolMessage(String type) {
+    public ProtocolMessage(ProtocolType type) {
         this.type = type;
     }
 
     //Properties
-    public String getType() {
+    public ProtocolType getType() {
         return type;
     }
 

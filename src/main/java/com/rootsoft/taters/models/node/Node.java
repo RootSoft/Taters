@@ -1,8 +1,6 @@
 package com.rootsoft.taters.models.node;
 
-import com.rootsoft.taters.models.commands.ProtocolCommand;
-import com.rootsoft.taters.models.protocols.ProtocolFactory;
-import com.rootsoft.taters.models.protocols.ProtocolMessage;
+import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
 import net.tomp2p.dht.*;
 import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureBootstrap;
@@ -10,8 +8,6 @@ import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.p2p.RequestP2PConfiguration;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
-import net.tomp2p.rpc.ObjectDataReply;
-import net.tomp2p.storage.Data;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,6 +38,25 @@ public abstract class Node {
      * You can either set a random node ID, or you can create the node with a KeyPair, which takes a public key and
      * generates the ID (SHA-1) out of this key.
      */
+    public Node(String name) {
+        this(name, null);
+
+        try {
+            peer = new PeerBuilderDHT(new PeerBuilder(new Number160(RND)).ports(4001).start()).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        init();
+
+    }
+
+    /**
+     * Create a new node.
+     *
+     * You can either set a random node ID, or you can create the node with a KeyPair, which takes a public key and
+     * generates the ID (SHA-1) out of this key.
+     */
     public Node(String name, NodeEventCallback callback) {
         this.name = name;
         this.callback = callback;
@@ -62,6 +77,7 @@ public abstract class Node {
      * @param masterNode
      */
     public Node(String name, Node masterNode, NodeEventCallback callback) {
+        this.name = name;
         this.callback = callback;
 
         try {
@@ -141,6 +157,10 @@ public abstract class Node {
 
     public String getName() {
         return name;
+    }
+
+    public void setNodeEventCallback(NodeEventCallback callback) {
+        this.callback = callback;
     }
 
     /**
