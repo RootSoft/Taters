@@ -40,15 +40,6 @@ public abstract class Node {
      */
     public Node(String name) {
         this(name, null);
-
-        try {
-            peer = new PeerBuilderDHT(new PeerBuilder(new Number160(RND)).ports(4001).start()).start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        init();
-
     }
 
     /**
