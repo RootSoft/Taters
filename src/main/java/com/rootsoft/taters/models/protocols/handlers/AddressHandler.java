@@ -13,47 +13,45 @@ import net.tomp2p.peers.PeerAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetAddressHandler extends ProtocolHandler {
+public class AddressHandler extends ProtocolHandler {
 
     //Constants
-    public static final String TAG = GetAddressHandler.class.getSimpleName();
+    public static final String TAG = AddressHandler.class.getSimpleName();
 
     //Attributes
-    private GetAddressProtocol protocol;
-    private List<PeerAddress> knownPeers;
+    private AddressProtocol protocol;
 
     //Constructors
 
-    public GetAddressHandler(Node node) {
+    public AddressHandler(Node node) {
         this(node, null);
     }
 
-    public GetAddressHandler(Node node, ProtocolHandler next) {
+    public AddressHandler(Node node, ProtocolHandler next) {
         super(node, next);
-        knownPeers = new ArrayList<>();
     }
 
     @Override
-    public Protocol resolveProtocolRequest(Protocol protocol) {
-        if (protocol.getType().equals(ProtocolType.GET_ADDR)) {
-            this.protocol = (GetAddressProtocol) protocol;
-            handleRequest();
-            return response();
+    public void resolveProtocolResponse(Protocol protocol) {
+        if (protocol.getType().equals(ProtocolType.ADDR)) {
+            this.protocol = (AddressProtocol) protocol;
+            handleResponse();
+            return;
         }
 
-        return super.resolveProtocolRequest(protocol);
-    }
-
-    private void handleRequest() {
-        knownPeers.addAll(node.getKnownPeers());
+        super.resolveProtocolResponse(protocol);
     }
 
     private void handleResponse() {
+        Log.i("Initial node received addresses");
+        for (PeerAddress address : protocol.getKnownPeers()) {
+            Log.i("Address: " + address.inetAddress().getHostAddress());
+        }
     }
 
     @Override
     protected Protocol response() {
-        return new AddressProtocol(knownPeers);
+        return null;
     }
 
 }

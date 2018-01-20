@@ -2,10 +2,7 @@ package com.rootsoft.taters.models.protocols;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.rootsoft.taters.models.protocols.messages.GetAddressProtocol;
-import com.rootsoft.taters.models.protocols.messages.Protocol;
-import com.rootsoft.taters.models.protocols.messages.VerackProtocol;
-import com.rootsoft.taters.models.protocols.messages.VersionProtocol;
+import com.rootsoft.taters.models.protocols.messages.*;
 import com.rootsoft.taters.utils.RuntimeTypeAdapterFactory;
 
 public class ProtocolSerializer {
@@ -21,7 +18,8 @@ public class ProtocolSerializer {
                         .of(Protocol.class)
                         .registerSubtype(VersionProtocol.class)
                         .registerSubtype(VerackProtocol.class)
-                        .registerSubtype(GetAddressProtocol.class);
+                        .registerSubtype(GetAddressProtocol.class)
+                        .registerSubtype(AddressProtocol.class);
 
         gson = new GsonBuilder()
                 .registerTypeAdapterFactory(adapter)

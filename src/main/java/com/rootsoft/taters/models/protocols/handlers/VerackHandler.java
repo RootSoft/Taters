@@ -57,8 +57,9 @@ public class VerackHandler extends ProtocolHandler {
 
     private void handleResponse() {
         Log.i("Connection request was accepted: " + protocol.isConnected());
-
-        node.sendProtocol(new GetAddressProtocol());
+        if (protocol.isConnected()) {
+            node.sendProtocol(new GetAddressProtocol());
+        }
     }
 
     @Override
