@@ -55,6 +55,7 @@ public class PeerNetwork {
                 }
 
                 node.setConnected(true);
+                node.setPeerNetwork(PeerNetwork.this);
                 nodes.add(node);
 
                 //Send a protocol message Version that contains various fields

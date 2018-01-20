@@ -27,6 +27,26 @@ public class SPVNode extends Node {
         super(name, callback);
     }
 
+    @Override
+    public boolean canMine() {
+        return false;
+    }
+
+    @Override
+    public boolean canRoute() {
+        return true;
+    }
+
+    @Override
+    public boolean hasCompleteBlockchain() {
+        return false;
+    }
+
+    @Override
+    public boolean hasWallet() {
+        return true;
+    }
+
     //Callbacks
 
     NodeEventCallback callback = new NodeEventCallback() {

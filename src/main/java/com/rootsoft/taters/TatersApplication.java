@@ -43,7 +43,7 @@ public class TatersApplication {
         network = new PeerNetwork(connectionCallback);
 
         //Create our nodes
-        Node node = NodeFactory.createNode("Initial node", NodeType.SPV);
+        Node node = NodeFactory.createNode("SPV node", NodeType.SPV);
         //Node second = NodeHelper.createFullNode("Second node");
 
         //Let the new nodes join the network

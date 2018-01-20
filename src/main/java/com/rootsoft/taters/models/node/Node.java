@@ -1,5 +1,6 @@
 package com.rootsoft.taters.models.node;
 
+import com.rootsoft.taters.models.PeerNetwork;
 import com.rootsoft.taters.models.node.implementations.NodeEventCallback;
 import com.rootsoft.taters.models.protocols.ProtocolExecutor;
 import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
@@ -27,6 +28,7 @@ public abstract class Node {
     private String name;
     private boolean connected;
 
+    private PeerNetwork peerNetwork;
     private PeerDHT peer;
     private NodeEventCallback callback;
     protected ProtocolExecutor executor;
@@ -137,6 +139,14 @@ public abstract class Node {
         return name;
     }
 
+    public void setPeerNetwork(PeerNetwork peerNetwork) {
+        this.peerNetwork = peerNetwork;
+    }
+
+    public PeerNetwork getPeerNetwork() {
+        return peerNetwork;
+    }
+
     public void setNodeEventCallback(NodeEventCallback callback) {
         this.callback = callback;
     }
@@ -174,4 +184,9 @@ public abstract class Node {
                 "peer=" + peer +
                 '}';
     }
+
+    public abstract boolean canMine();
+    public abstract boolean canRoute();
+    public abstract boolean hasCompleteBlockchain();
+    public abstract boolean hasWallet();
 }

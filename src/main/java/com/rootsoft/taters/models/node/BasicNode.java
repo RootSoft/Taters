@@ -19,4 +19,25 @@ public class BasicNode extends Node {
         super(name, callback);
     }
 
+    @Override
+    public boolean canMine() {
+        return false;
+    }
+
+    @Override
+    public boolean canRoute() {
+        return true;
+    }
+
+    @Override
+    public boolean hasCompleteBlockchain() {
+        return true;
+    }
+
+    @Override
+    public boolean hasWallet() {
+        return false;
+    }
+
+
 }
