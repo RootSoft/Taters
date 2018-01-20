@@ -17,6 +17,10 @@ public class VersionHandler extends ProtocolHandler {
 
     //Constructors
 
+    public VersionHandler(Node node) {
+        super(node);
+    }
+
     public VersionHandler(Node node, ProtocolHandler next) {
         super(node, next);
     }
@@ -49,7 +53,7 @@ public class VersionHandler extends ProtocolHandler {
 
     private void handleResponse() {
         Log.i("Received version: " + protocol.getVersionCode() + ", blockcount: " + protocol.getBlockCount() + " in initial node");
-        node.sendProtocol(new VerackProtocol(200));
+        node.sendProtocol(new VerackProtocol(true));
     }
 
     @Override

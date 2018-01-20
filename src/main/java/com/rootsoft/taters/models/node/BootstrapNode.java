@@ -51,15 +51,15 @@ public class BootstrapNode extends Node {
         }
 
         @Override
-        public Protocol onProtocolRequestReceived(PeerAddress sender, Protocol message) {
+        public Protocol onProtocolRequestReceived(Protocol message) {
             Log.i("I'm bootstrapnode and I just got the message [" + message
-                    + "] from " + sender.peerId());
+                    + "] from " + message.getSender().peerId());
 
             return executor.resolveProtocolRequest(message);
         }
 
         @Override
-        public void onProtocolResponseReceived(PeerAddress sender, Protocol message) {
+        public void onProtocolResponseReceived(Protocol message) {
             executor.resolveProtocolResponse(message);
         }
 

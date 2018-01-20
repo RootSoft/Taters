@@ -1,5 +1,6 @@
 package com.rootsoft.taters.models.protocols.handlers;
 
+import com.rootsoft.taters.models.protocols.messages.GetAddressProtocol;
 import com.rootsoft.taters.utils.Log;
 import com.rootsoft.taters.models.node.Node;
 import com.rootsoft.taters.models.protocols.ProtocolType;
@@ -13,8 +14,13 @@ public class VerackHandler extends ProtocolHandler {
 
     //Attributes
     private VerackProtocol protocol;
+    private boolean connected;
 
     //Constructors
+
+    public VerackHandler(Node node) {
+        super(node);
+    }
 
     public VerackHandler(Node node, ProtocolHandler next) {
         super(node, next);
@@ -43,16 +49,21 @@ public class VerackHandler extends ProtocolHandler {
     }
 
     private void handleRequest() {
-        Log.i("Accepting " + protocol.getStatusCode() + " connection request...");
+        Log.i("Accepting connection request...");
+
+        //Connect the node with the address
+        connected = node.connect(protocol.getSender());
     }
 
     private void handleResponse() {
-        Log.i("Connection request was accepted: " + protocol.getStatusCode());
+        Log.i("Connection request was accepted: " + protocol.isConnected());
+
+        node.sendProtocol(new GetAddressProtocol());
     }
 
     @Override
     protected Protocol response() {
-        return new VerackProtocol(200);
+        return new VerackProtocol(connected);
     }
 
 }

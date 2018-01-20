@@ -42,7 +42,7 @@ public class TatersApplication {
 
         //Create our nodes
         Node node = NodeFactory.createNode("SPV node", NodeType.SPV);
-        //Node second = NodeHelper.createFullNode("Second node");
+        Node second = NodeFactory.createNode("SPV node", NodeType.SPV);
 
         //Let the new nodes join the network
         network.join(node);

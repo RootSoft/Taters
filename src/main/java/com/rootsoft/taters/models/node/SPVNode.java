@@ -58,14 +58,14 @@ public class SPVNode extends Node {
         }
 
         @Override
-        public Protocol onProtocolRequestReceived(PeerAddress sender, Protocol message) {
+        public Protocol onProtocolRequestReceived(Protocol message) {
             return executor.resolveProtocolRequest(message);
         }
 
         @Override
-        public void onProtocolResponseReceived(PeerAddress sender, Protocol message) {
+        public void onProtocolResponseReceived(Protocol message) {
             Log.i("I'm SPV node and I just got the message [" + message
-                    + "] from " + sender.peerId());
+                    + "] from " + message.getSender().peerId());
 
             executor.resolveProtocolResponse(message);
         }

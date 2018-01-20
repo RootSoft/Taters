@@ -2,5 +2,6 @@ package com.rootsoft.taters.models.protocols;
 
 public enum ProtocolType {
     VERSION,
-    VERACK
+    VERACK,
+    GET_ADDR
 }

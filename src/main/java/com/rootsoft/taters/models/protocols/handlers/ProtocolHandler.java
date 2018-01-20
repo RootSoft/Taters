@@ -13,12 +13,26 @@ public abstract class ProtocolHandler {
     private ProtocolHandler next;
 
     //Constructors
+
+    public ProtocolHandler(Node node) {
+        this.node = node;
+    }
+
     public ProtocolHandler(Node node, ProtocolHandler next) {
         this.node = node;
         this.next = next;
     }
 
     //Methods
+
+    public ProtocolHandler getNextHandler() {
+        return next;
+    }
+
+    public void setNextHandler(ProtocolHandler next) {
+        this.next = next;
+    }
+
     public Protocol resolveProtocolRequest(Protocol protocol) {
         if (next != null) {
             return next.resolveProtocolRequest(protocol);

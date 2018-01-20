@@ -15,12 +15,12 @@ public interface NodeEventCallback {
      * Callback when a message was received from another peer.
      * We can return an object as a reply to the sender
      */
-    Protocol onProtocolRequestReceived(PeerAddress sender, Protocol message);
+    Protocol onProtocolRequestReceived(Protocol message);
 
     /**
      * Callback when a response was sent from a peer for your given request.
      */
-    void onProtocolResponseReceived(PeerAddress sender, Protocol message);
+    void onProtocolResponseReceived(Protocol message);
 
     /**
      * Callback when an error occured on the network.

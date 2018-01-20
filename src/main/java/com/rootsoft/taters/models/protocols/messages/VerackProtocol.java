@@ -11,17 +11,18 @@ public class VerackProtocol extends Protocol {
     public static final String TAG = VerackProtocol.class.getSimpleName();
 
     //Attributes
-    private int statusCode;
+    private boolean connected;
 
     //Constructors
-    public VerackProtocol(int statusCode) {
+    public VerackProtocol(boolean connected) {
         super(ProtocolType.VERACK);
-        this.statusCode = statusCode;
+        this.connected = connected;
     }
 
     //Properties
 
-    public int getStatusCode() {
-        return statusCode;
+    public boolean isConnected() {
+        return connected;
     }
+
 }

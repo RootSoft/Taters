@@ -75,7 +75,9 @@ public abstract class Node {
 
         peer.peer().objectDataReply((sender, request) -> {
             if (callback != null) {
-                return callback.onProtocolRequestReceived(sender, serializer.deserialize((String) request));
+                Protocol protocol = serializer.deserialize((String) request);
+                protocol.setSender(sender);
+                return callback.onProtocolRequestReceived(protocol);
             }
             return null;
         });
@@ -108,7 +110,9 @@ public abstract class Node {
                 }
 
                 for (Map.Entry<PeerAddress, Object> entry : futureSend.rawDirectData2().entrySet()) {
-                    callback.onProtocolResponseReceived(entry.getKey(), (Protocol) entry.getValue());
+                    Protocol response = (Protocol) entry.getValue();
+                    response.setSender(entry.getKey());
+                    callback.onProtocolResponseReceived(response);
                 }
 
             }
@@ -117,19 +121,10 @@ public abstract class Node {
     }
 
     /**
-     * Bootstrap the node to a given node.
-     * <p>
-     * A bootstrapping node, also known as a rendezvous host, is a node in an overlay network that provides initial
-     * configuration information to newly joining nodes so that they may successfully join the overlay network.
+     * Establish a connection with a peer.
      */
-    public boolean bootstrap(Node bootstrappingNode) {
-        if (peer == null || bootstrappingNode.getPeer() == null)
-            return false;
-
-        FutureBootstrap bootstrap = peer.peer().bootstrap().peerAddress(bootstrappingNode.getPeer().peerAddress()).start();
-        bootstrap.awaitUninterruptibly();
-
-        return true;
+    public boolean connect(PeerAddress sender) {
+        return getPeer().peerBean().peerMap().peerFound(sender, null, null, null);
     }
 
 
@@ -163,9 +158,8 @@ public abstract class Node {
      * Returns a list of all known peers attached to this node.
      */
     public List<PeerAddress> getKnownPeers() {
-        List<PeerAddress> peers = new ArrayList<>();
         if (peer == null)
-            return peers;
+            return new ArrayList<>();
 
         return peer.peerBean().peerMap().all();
     }

@@ -1,6 +1,7 @@
 package com.rootsoft.taters.models.protocols.messages;
 
 import com.rootsoft.taters.models.protocols.ProtocolType;
+import net.tomp2p.peers.PeerAddress;
 
 import java.io.Serializable;
 
@@ -15,6 +16,7 @@ public abstract class Protocol implements Serializable {
     //Attributes
     private ProtocolType protocolType;
     private boolean resolved;
+    private PeerAddress sender;
 
     //Constructors
     public Protocol(ProtocolType type) {
@@ -34,4 +36,11 @@ public abstract class Protocol implements Serializable {
         this.resolved = true;
     }
 
+    public PeerAddress getSender() {
+        return sender;
+    }
+
+    public void setSender(PeerAddress sender) {
+        this.sender = sender;
+    }
 }
