@@ -1,11 +1,11 @@
 package com.rootsoft.taters.models.protocols.handlers;
 
+import com.rootsoft.taters.models.protocols.messages.VersionProtocol;
 import com.rootsoft.taters.utils.Log;
 import com.rootsoft.taters.models.node.Node;
-import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
+import com.rootsoft.taters.models.protocols.messages.Protocol;
 import com.rootsoft.taters.models.protocols.ProtocolType;
-import com.rootsoft.taters.models.protocols.messages.VerackMessage;
-import com.rootsoft.taters.models.protocols.messages.VersionMessage;
+import com.rootsoft.taters.models.protocols.messages.VerackProtocol;
 
 public class VersionHandler extends ProtocolHandler {
 
@@ -13,7 +13,7 @@ public class VersionHandler extends ProtocolHandler {
     public static final String TAG = VersionHandler.class.getSimpleName();
 
     //Attributes
-    private VersionMessage message;
+    private VersionProtocol protocol;
 
     //Constructors
 
@@ -22,39 +22,39 @@ public class VersionHandler extends ProtocolHandler {
     }
 
     @Override
-    public ProtocolMessage resolveProtocolRequest(ProtocolMessage message) {
-        if (message.getType().equals(ProtocolType.VERSION)) {
-            this.message = (VersionMessage) message;
+    public Protocol resolveProtocolRequest(Protocol protocol) {
+        if (protocol.getType().equals(ProtocolType.VERSION)) {
+            this.protocol = (VersionProtocol) protocol;
             handleRequest();
             return response();
         }
 
-        return super.resolveProtocolRequest(message);
+        return super.resolveProtocolRequest(protocol);
     }
 
     @Override
-    public void resolveProtocolResponse(ProtocolMessage message) {
-        if (message.getType().equals(ProtocolType.VERSION)) {
-            this.message = (VersionMessage) message;
+    public void resolveProtocolResponse(Protocol protocol) {
+        if (protocol.getType().equals(ProtocolType.VERSION)) {
+            this.protocol = (VersionProtocol) protocol;
             handleResponse();
             return;
         }
 
-        super.resolveProtocolResponse(message);
+        super.resolveProtocolResponse(protocol);
     }
 
     private void handleRequest() {
-        Log.i("Received version: " + message.getVersionCode() + ", blockcount: " + message.getBlockCount() + " in bootstrap node");
+        Log.i("Received version: " + protocol.getVersionCode() + ", blockcount: " + protocol.getBlockCount() + " in bootstrap node");
     }
 
     private void handleResponse() {
-        Log.i("Received version: " + message.getVersionCode() + ", blockcount: " + message.getBlockCount() + " in initial node");
-        node.sendProtocolMessage(new VerackMessage(200));
+        Log.i("Received version: " + protocol.getVersionCode() + ", blockcount: " + protocol.getBlockCount() + " in initial node");
+        node.sendProtocol(new VerackProtocol(200));
     }
 
     @Override
-    protected ProtocolMessage response() {
-        return new VersionMessage(2, 12);
+    protected Protocol response() {
+        return new VersionProtocol(2, 12);
     }
 
 }

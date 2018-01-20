@@ -6,17 +6,17 @@ import com.rootsoft.taters.models.protocols.ProtocolType;
  * This should be the first message that a node sends out to the network.
  * The message contains its version and block count.
  */
-public class VersionMessage extends ProtocolMessage {
+public class VersionProtocol extends Protocol {
 
     //Constants
-    public static final String TAG = VersionMessage.class.getSimpleName();
+    public static final String TAG = VersionProtocol.class.getSimpleName();
 
     //Attributes
     private int versionCode;
     private int blockCount;
 
     //Constructors
-    public VersionMessage(int versionCode, int blockCount) {
+    public VersionProtocol(int versionCode, int blockCount) {
         super(ProtocolType.VERSION);
         this.versionCode = versionCode;
         this.blockCount = blockCount;

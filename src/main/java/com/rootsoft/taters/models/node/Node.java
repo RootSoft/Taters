@@ -1,11 +1,10 @@
 package com.rootsoft.taters.models.node;
 
-import com.google.gson.Gson;
 import com.rootsoft.taters.models.PeerNetwork;
 import com.rootsoft.taters.models.node.implementations.NodeEventCallback;
 import com.rootsoft.taters.models.protocols.ProtocolExecutor;
 import com.rootsoft.taters.models.protocols.ProtocolSerializer;
-import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
+import com.rootsoft.taters.models.protocols.messages.Protocol;
 import net.tomp2p.dht.*;
 import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureBootstrap;
@@ -13,7 +12,6 @@ import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.p2p.RequestP2PConfiguration;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
-import net.tomp2p.rpc.ObjectDataReply;
 
 import java.io.IOException;
 import java.util.*;
@@ -88,11 +86,11 @@ public abstract class Node {
     /**
      * Sends a protocol message on the network.
      *
-     * @param message The protocol message to be sent.
+     * @param protocol The protocol to be sent.
      */
-    public void sendProtocolMessage(ProtocolMessage message) {
+    public void sendProtocol(Protocol protocol) {
         FutureSend futureSend = peer.send(Number160.createHash("key"))
-                .object(serializer.serialize(message))
+                .object(serializer.serialize(protocol))
                 .requestP2PConfiguration(new RequestP2PConfiguration(1, 5, 0))
                 .start();
 
@@ -103,14 +101,14 @@ public abstract class Node {
                     return;
                 }
 
-                callback.onMessageSent(message);
+                callback.onMessageSent(protocol);
 
                 if (!future.isCompleted()) {
                     callback.onError(400, "Unable to send message");
                 }
 
                 for (Map.Entry<PeerAddress, Object> entry : futureSend.rawDirectData2().entrySet()) {
-                    callback.onProtocolResponseReceived(entry.getKey(), (ProtocolMessage) entry.getValue());
+                    callback.onProtocolResponseReceived(entry.getKey(), (Protocol) entry.getValue());
                 }
 
             }

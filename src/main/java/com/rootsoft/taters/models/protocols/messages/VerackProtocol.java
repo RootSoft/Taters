@@ -3,18 +3,18 @@ package com.rootsoft.taters.models.protocols.messages;
 import com.rootsoft.taters.models.protocols.ProtocolType;
 
 /**
- * A response on the VersionMessage, accepting the connection request.
+ * A response on the VersionProtocol, accepting the connection request.
  */
-public class VerackMessage extends ProtocolMessage {
+public class VerackProtocol extends Protocol {
 
     //Constants
-    public static final String TAG = VerackMessage.class.getSimpleName();
+    public static final String TAG = VerackProtocol.class.getSimpleName();
 
     //Attributes
     private int statusCode;
 
     //Constructors
-    public VerackMessage(int statusCode) {
+    public VerackProtocol(int statusCode) {
         super(ProtocolType.VERACK);
         this.statusCode = statusCode;
     }

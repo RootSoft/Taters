@@ -7,17 +7,17 @@ import java.io.Serializable;
 /**
  * A Protocol Message is a message to be sent on the P2P network.
  */
-public abstract class ProtocolMessage implements Serializable {
+public abstract class Protocol implements Serializable {
 
     //Constants
-    public static final String TAG = ProtocolMessage.class.getSimpleName();
+    public static final String TAG = Protocol.class.getSimpleName();
 
     //Attributes
     private ProtocolType protocolType;
     private boolean resolved;
 
     //Constructors
-    public ProtocolMessage(ProtocolType type) {
+    public Protocol(ProtocolType type) {
         this.protocolType = type;
     }
 

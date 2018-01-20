@@ -2,9 +2,9 @@ package com.rootsoft.taters.models.protocols;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
-import com.rootsoft.taters.models.protocols.messages.VerackMessage;
-import com.rootsoft.taters.models.protocols.messages.VersionMessage;
+import com.rootsoft.taters.models.protocols.messages.Protocol;
+import com.rootsoft.taters.models.protocols.messages.VerackProtocol;
+import com.rootsoft.taters.models.protocols.messages.VersionProtocol;
 import com.rootsoft.taters.utils.RuntimeTypeAdapterFactory;
 
 public class ProtocolSerializer {
@@ -16,21 +16,21 @@ public class ProtocolSerializer {
     private Gson gson;
 
     public ProtocolSerializer() {
-        RuntimeTypeAdapterFactory<ProtocolMessage> adapter = RuntimeTypeAdapterFactory
-                        .of(ProtocolMessage.class)
-                        .registerSubtype(VersionMessage.class)
-                        .registerSubtype(VerackMessage.class);
+        RuntimeTypeAdapterFactory<Protocol> adapter = RuntimeTypeAdapterFactory
+                        .of(Protocol.class)
+                        .registerSubtype(VersionProtocol.class)
+                        .registerSubtype(VerackProtocol.class);
 
         gson = new GsonBuilder()
                 .registerTypeAdapterFactory(adapter)
                 .create();
     }
 
-    public String serialize(ProtocolMessage message) {
-        return gson.toJson(message, ProtocolMessage.class);
+    public String serialize(Protocol message) {
+        return gson.toJson(message, Protocol.class);
     }
 
-    public ProtocolMessage deserialize(String message) {
-        return gson.fromJson(message, ProtocolMessage.class);
+    public Protocol deserialize(String message) {
+        return gson.fromJson(message, Protocol.class);
     }
 }

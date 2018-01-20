@@ -1,7 +1,7 @@
 package com.rootsoft.taters.models.protocols.handlers;
 
 import com.rootsoft.taters.models.node.Node;
-import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
+import com.rootsoft.taters.models.protocols.messages.Protocol;
 
 public abstract class ProtocolHandler {
 
@@ -19,21 +19,21 @@ public abstract class ProtocolHandler {
     }
 
     //Methods
-    public ProtocolMessage resolveProtocolRequest(ProtocolMessage message) {
+    public Protocol resolveProtocolRequest(Protocol protocol) {
         if (next != null) {
-            return next.resolveProtocolRequest(message);
+            return next.resolveProtocolRequest(protocol);
         }
         return null;
     }
 
-    public void resolveProtocolResponse(ProtocolMessage message) {
+    public void resolveProtocolResponse(Protocol protocol) {
         if (next != null) {
-            next.resolveProtocolResponse(message);
+            next.resolveProtocolResponse(protocol);
         }
     }
 
     //Properties
 
-    protected abstract ProtocolMessage response();
+    protected abstract Protocol response();
 
 }

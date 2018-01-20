@@ -3,8 +3,8 @@ package com.rootsoft.taters.models.protocols.handlers;
 import com.rootsoft.taters.utils.Log;
 import com.rootsoft.taters.models.node.Node;
 import com.rootsoft.taters.models.protocols.ProtocolType;
-import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
-import com.rootsoft.taters.models.protocols.messages.VerackMessage;
+import com.rootsoft.taters.models.protocols.messages.Protocol;
+import com.rootsoft.taters.models.protocols.messages.VerackProtocol;
 
 public class VerackHandler extends ProtocolHandler {
 
@@ -12,7 +12,7 @@ public class VerackHandler extends ProtocolHandler {
     public static final String TAG = VerackHandler.class.getSimpleName();
 
     //Attributes
-    private VerackMessage message;
+    private VerackProtocol protocol;
 
     //Constructors
 
@@ -21,38 +21,38 @@ public class VerackHandler extends ProtocolHandler {
     }
 
     @Override
-    public ProtocolMessage resolveProtocolRequest(ProtocolMessage message) {
-        if (message.getType().equals(ProtocolType.VERACK)) {
-            this.message = (VerackMessage) message;
+    public Protocol resolveProtocolRequest(Protocol protocol) {
+        if (protocol.getType().equals(ProtocolType.VERACK)) {
+            this.protocol = (VerackProtocol) protocol;
             handleRequest();
             return response();
         }
 
-        return super.resolveProtocolRequest(message);
+        return super.resolveProtocolRequest(protocol);
     }
 
     @Override
-    public void resolveProtocolResponse(ProtocolMessage message) {
-        if (message.getType().equals(ProtocolType.VERACK)) {
-            this.message = (VerackMessage) message;
+    public void resolveProtocolResponse(Protocol protocol) {
+        if (protocol.getType().equals(ProtocolType.VERACK)) {
+            this.protocol = (VerackProtocol) protocol;
             handleResponse();
             return;
         }
 
-        super.resolveProtocolResponse(message);
+        super.resolveProtocolResponse(protocol);
     }
 
     private void handleRequest() {
-        Log.i("Accepting " + message.getStatusCode() + " connection request...");
+        Log.i("Accepting " + protocol.getStatusCode() + " connection request...");
     }
 
     private void handleResponse() {
-        Log.i("Connection request was accepted: " + message.getStatusCode());
+        Log.i("Connection request was accepted: " + protocol.getStatusCode());
     }
 
     @Override
-    protected ProtocolMessage response() {
-        return new VerackMessage(200);
+    protected Protocol response() {
+        return new VerackProtocol(200);
     }
 
 }
