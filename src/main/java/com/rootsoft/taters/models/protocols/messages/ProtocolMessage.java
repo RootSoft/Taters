@@ -13,17 +13,17 @@ public abstract class ProtocolMessage implements Serializable {
     public static final String TAG = ProtocolMessage.class.getSimpleName();
 
     //Attributes
-    private ProtocolType type;
+    private ProtocolType protocolType;
     private boolean resolved;
 
     //Constructors
     public ProtocolMessage(ProtocolType type) {
-        this.type = type;
+        this.protocolType = type;
     }
 
     //Properties
     public ProtocolType getType() {
-        return type;
+        return protocolType;
     }
 
     public boolean isResolved() {

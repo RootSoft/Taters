@@ -1,8 +1,10 @@
 package com.rootsoft.taters.models.node;
 
+import com.google.gson.Gson;
 import com.rootsoft.taters.models.PeerNetwork;
 import com.rootsoft.taters.models.node.implementations.NodeEventCallback;
 import com.rootsoft.taters.models.protocols.ProtocolExecutor;
+import com.rootsoft.taters.models.protocols.ProtocolSerializer;
 import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
 import net.tomp2p.dht.*;
 import net.tomp2p.futures.BaseFutureAdapter;
@@ -11,6 +13,7 @@ import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.p2p.RequestP2PConfiguration;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
+import net.tomp2p.rpc.ObjectDataReply;
 
 import java.io.IOException;
 import java.util.*;
@@ -32,6 +35,7 @@ public abstract class Node {
     private PeerDHT peer;
     private NodeEventCallback callback;
     protected ProtocolExecutor executor;
+    private ProtocolSerializer serializer;
 
     //Constructors
 
@@ -55,6 +59,7 @@ public abstract class Node {
         this.name = name;
         this.callback = callback;
         this.executor = new ProtocolExecutor(this);
+        this.serializer = new ProtocolSerializer();
 
         try {
             peer = new PeerBuilderDHT(new PeerBuilder(new Number160(RND)).ports(4001).start()).start();
@@ -70,7 +75,12 @@ public abstract class Node {
         if (peer == null)
             return;
 
-        peer.peer().objectDataReply((sender, request) -> (callback != null ? callback.onProtocolRequestReceived(sender, (ProtocolMessage) request) : null));
+        peer.peer().objectDataReply((sender, request) -> {
+            if (callback != null) {
+                return callback.onProtocolRequestReceived(sender, serializer.deserialize((String) request));
+            }
+            return null;
+        });
     }
 
     //Methods
@@ -78,11 +88,11 @@ public abstract class Node {
     /**
      * Sends a protocol message on the network.
      *
-     * @param message A message to be sent
+     * @param message The protocol message to be sent.
      */
     public void sendProtocolMessage(ProtocolMessage message) {
         FutureSend futureSend = peer.send(Number160.createHash("key"))
-                .object(message) //TODO Serialize the message using GSON
+                .object(serializer.serialize(message))
                 .requestP2PConfiguration(new RequestP2PConfiguration(1, 5, 0))
                 .start();
 

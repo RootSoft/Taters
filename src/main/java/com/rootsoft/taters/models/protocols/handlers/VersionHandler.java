@@ -48,7 +48,6 @@ public class VersionHandler extends ProtocolHandler {
 
     private void handleResponse() {
         System.out.println("Received version: " + message.getVersionCode() + ", blockcount: " + message.getBlockCount() + " in initial node");
-        //TODO dispatch a VerackMessage to establish the connection
         node.sendProtocolMessage(new VerackMessage(200));
     }
 

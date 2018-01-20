@@ -46,4 +46,7 @@ dependencies {
 	//P2P
 	compile("net.tomp2p:tomp2p-all:5.0-Beta8")
 
+	//GSON
+	compile 'com.google.code.gson:gson:2.8.2'
+
 }
