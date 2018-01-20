@@ -1,5 +1,6 @@
 package com.rootsoft.taters.models.protocols.handlers;
 
+import com.rootsoft.taters.utils.Log;
 import com.rootsoft.taters.models.node.Node;
 import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
 import com.rootsoft.taters.models.protocols.ProtocolType;
@@ -43,11 +44,11 @@ public class VersionHandler extends ProtocolHandler {
     }
 
     private void handleRequest() {
-        System.out.println("Received version: " + message.getVersionCode() + ", blockcount: " + message.getBlockCount() + " in bootstrap node");
+        Log.i("Received version: " + message.getVersionCode() + ", blockcount: " + message.getBlockCount() + " in bootstrap node");
     }
 
     private void handleResponse() {
-        System.out.println("Received version: " + message.getVersionCode() + ", blockcount: " + message.getBlockCount() + " in initial node");
+        Log.i("Received version: " + message.getVersionCode() + ", blockcount: " + message.getBlockCount() + " in initial node");
         node.sendProtocolMessage(new VerackMessage(200));
     }
 

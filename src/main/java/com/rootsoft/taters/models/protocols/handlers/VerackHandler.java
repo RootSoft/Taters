@@ -1,10 +1,10 @@
 package com.rootsoft.taters.models.protocols.handlers;
 
+import com.rootsoft.taters.utils.Log;
 import com.rootsoft.taters.models.node.Node;
 import com.rootsoft.taters.models.protocols.ProtocolType;
 import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
 import com.rootsoft.taters.models.protocols.messages.VerackMessage;
-import com.rootsoft.taters.models.protocols.messages.VersionMessage;
 
 public class VerackHandler extends ProtocolHandler {
 
@@ -43,11 +43,11 @@ public class VerackHandler extends ProtocolHandler {
     }
 
     private void handleRequest() {
-        System.out.println("Accepting " + message.getStatusCode() + " connection request...");
+        Log.i("Accepting " + message.getStatusCode() + " connection request...");
     }
 
     private void handleResponse() {
-        System.out.println("Connection request was accepted: " + message.getStatusCode());
+        Log.i("Connection request was accepted: " + message.getStatusCode());
     }
 
     @Override

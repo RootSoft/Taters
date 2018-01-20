@@ -1,5 +1,6 @@
 package com.rootsoft.taters.models.node;
 
+import com.rootsoft.taters.utils.Log;
 import com.rootsoft.taters.models.node.implementations.NodeEventCallback;
 import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
 import net.tomp2p.peers.PeerAddress;
@@ -63,7 +64,7 @@ public class SPVNode extends Node {
 
         @Override
         public void onProtocolResponseReceived(PeerAddress sender, ProtocolMessage message) {
-            System.out.println("I'm SPV node and I just got the message [" + message
+            Log.i("I'm SPV node and I just got the message [" + message
                     + "] from " + sender.peerId());
 
             executor.resolveProtocolResponse(message);

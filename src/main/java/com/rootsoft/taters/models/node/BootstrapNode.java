@@ -1,5 +1,6 @@
 package com.rootsoft.taters.models.node;
 
+import com.rootsoft.taters.utils.Log;
 import com.rootsoft.taters.models.node.implementations.NodeEventCallback;
 import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
 import net.tomp2p.peers.PeerAddress;
@@ -51,7 +52,7 @@ public class BootstrapNode extends Node {
 
         @Override
         public ProtocolMessage onProtocolRequestReceived(PeerAddress sender, ProtocolMessage message) {
-            System.out.println("I'm bootstrapnode and I just got the message [" + message
+            Log.i("I'm bootstrapnode and I just got the message [" + message
                     + "] from " + sender.peerId());
 
             return executor.resolveProtocolRequest(message);
