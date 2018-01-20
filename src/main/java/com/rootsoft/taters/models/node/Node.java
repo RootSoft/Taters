@@ -1,5 +1,7 @@
 package com.rootsoft.taters.models.node;
 
+import com.rootsoft.taters.models.node.implementations.NodeEventCallback;
+import com.rootsoft.taters.models.protocols.ProtocolExecutor;
 import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
 import net.tomp2p.dht.*;
 import net.tomp2p.futures.BaseFutureAdapter;
@@ -10,9 +12,7 @@ import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * https://tomp2p.net/doc/quick/
@@ -29,6 +29,7 @@ public abstract class Node {
 
     private PeerDHT peer;
     private NodeEventCallback callback;
+    protected ProtocolExecutor executor;
 
     //Constructors
 
@@ -51,28 +52,10 @@ public abstract class Node {
     public Node(String name, NodeEventCallback callback) {
         this.name = name;
         this.callback = callback;
+        this.executor = new ProtocolExecutor();
 
         try {
             peer = new PeerBuilderDHT(new PeerBuilder(new Number160(RND)).ports(4001).start()).start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        init();
-
-    }
-
-    /**
-     * Creates a new node with a masterpeer.
-     *
-     * @param masterNode
-     */
-    public Node(String name, Node masterNode, NodeEventCallback callback) {
-        this.name = name;
-        this.callback = callback;
-
-        try {
-            peer = new PeerBuilderDHT(new PeerBuilder(new Number160(RND)).masterPeer(masterNode.getPeer().peer()).start()).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,7 +68,7 @@ public abstract class Node {
         if (peer == null)
             return;
 
-        peer.peer().objectDataReply((sender, request) -> callback.onMessageReceived(sender, (ProtocolMessage) request));
+        peer.peer().objectDataReply((sender, request) -> (callback != null ? callback.onProtocolRequestReceived(sender, (ProtocolMessage) request) : null));
     }
 
     //Methods
@@ -104,14 +87,18 @@ public abstract class Node {
         futureSend.addListener(new BaseFutureAdapter<FutureSend>() {
             @Override
             public void operationComplete(FutureSend future) throws Exception {
+                if (callback == null) {
+                    return;
+                }
+
                 callback.onMessageSent(message);
 
                 if (!future.isCompleted()) {
                     callback.onError(400, "Unable to send message");
                 }
 
-                for (Object object : futureSend.rawDirectData2().values()) {
-                    callback.onResponseReceived((ProtocolMessage) object);
+                for (Map.Entry<PeerAddress, Object> entry : futureSend.rawDirectData2().entrySet()) {
+                    callback.onProtocolResponseReceived(entry.getKey(), (ProtocolMessage) entry.getValue());
                 }
 
             }

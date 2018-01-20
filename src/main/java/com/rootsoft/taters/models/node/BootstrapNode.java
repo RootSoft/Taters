@@ -1,6 +1,6 @@
 package com.rootsoft.taters.models.node;
 
-import com.rootsoft.taters.models.protocols.ProtocolExecutor;
+import com.rootsoft.taters.models.node.implementations.NodeEventCallback;
 import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
 import net.tomp2p.peers.PeerAddress;
 
@@ -13,42 +13,40 @@ public class BootstrapNode extends Node {
     //Constants
     public static final String TAG = BootstrapNode.class.getSimpleName();
 
-    //Attributes
-
-    //Constructors
-    public BootstrapNode() {
-        super("BootstrapNode", new NodeEventCallback() {
-
-            @Override
-            public void onMessageSent(ProtocolMessage message) {
-
-            }
-
-            @Override
-            public ProtocolMessage onMessageReceived(PeerAddress sender, ProtocolMessage message) {
-                System.out.println("I'm bootstrapnode and I just got the message [" + message
-                        + "] from " + sender.peerId());
-                ProtocolExecutor executor = new ProtocolExecutor();
-                return executor.resolveProtocolRequest(message);
-            }
-
-            @Override
-            public void onResponseReceived(ProtocolMessage message) {
-                ProtocolExecutor executor = new ProtocolExecutor();
-                executor.resolveProtocolResponse(message);
-            }
-
-            @Override
-            public void onError(int errorCode, String errorMessage) {
-                System.err.println("Error: " + errorCode + ", message: " + errorMessage);
-            }
-
-        });
-
+    public BootstrapNode(String name) {
+        super(name);
+        setNodeEventCallback(callback);
     }
 
-    //Methods
+    public BootstrapNode(String name, NodeEventCallback callback) {
+        super(name, callback);
+    }
 
-    //Properties
+    NodeEventCallback callback = new NodeEventCallback() {
+
+        @Override
+        public void onMessageSent(ProtocolMessage message) {
+
+        }
+
+        @Override
+        public ProtocolMessage onProtocolRequestReceived(PeerAddress sender, ProtocolMessage message) {
+            System.out.println("I'm bootstrapnode and I just got the message [" + message
+                    + "] from " + sender.peerId());
+
+            return executor.resolveProtocolRequest(message);
+        }
+
+        @Override
+        public void onProtocolResponseReceived(PeerAddress sender, ProtocolMessage message) {
+            executor.resolveProtocolResponse(message);
+        }
+
+        @Override
+        public void onError(int errorCode, String errorMessage) {
+
+        }
+
+    };
 
 }

@@ -1,8 +1,9 @@
 package com.rootsoft.taters.models;
 
 
-import com.rootsoft.taters.models.node.BootstrapNode;
 import com.rootsoft.taters.models.node.Node;
+import com.rootsoft.taters.factories.NodeFactory;
+import com.rootsoft.taters.models.node.NodeType;
 import com.rootsoft.taters.models.protocols.messages.VersionMessage;
 import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureBootstrap;
@@ -30,7 +31,7 @@ public class PeerNetwork {
     public PeerNetwork(ConnectionCallback callback) {
         this.callback = callback;
         nodes = new ArrayList<>();
-        bootstrapNode = new BootstrapNode();
+        bootstrapNode = NodeFactory.createNode("BootstrapNode", NodeType.BOOTSTRAP);
     }
 
 

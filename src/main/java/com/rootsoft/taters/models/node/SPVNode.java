@@ -1,7 +1,14 @@
 package com.rootsoft.taters.models.node;
 
+import com.rootsoft.taters.models.node.implementations.NodeEventCallback;
+import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
+import net.tomp2p.peers.PeerAddress;
+
 /**
- * SPV nodes or light-weight clients perform only wallet and network routing functionality.
+ * SPV (Single Payment Verification) nodes perform only wallet or network routing functionality.
+ *
+ * A node that does not verify everything, but instead relies on either connecting to a trusted node,
+ * or puts its faith in high difficulty as a proxy for proof of validity.
  */
 public class SPVNode extends Node {
 
@@ -11,12 +18,42 @@ public class SPVNode extends Node {
     //Attributes
 
     //Constructors
+    public SPVNode(String name) {
+        super(name);
+        setNodeEventCallback(callback);
+    }
+
     public SPVNode(String name, NodeEventCallback callback) {
         super(name, callback);
     }
 
-    public SPVNode(String name, Node masterNode, NodeEventCallback callback) {
-        super(name, masterNode, callback);
-    }
+    //Callbacks
+
+    NodeEventCallback callback = new NodeEventCallback() {
+
+        @Override
+        public void onMessageSent(ProtocolMessage message) {
+
+        }
+
+        @Override
+        public ProtocolMessage onProtocolRequestReceived(PeerAddress sender, ProtocolMessage message) {
+            return executor.resolveProtocolRequest(message);
+        }
+
+        @Override
+        public void onProtocolResponseReceived(PeerAddress sender, ProtocolMessage message) {
+            System.out.println("I'm SPV node and I just got the message [" + message
+                    + "] from " + sender.peerId());
+
+            executor.resolveProtocolResponse(message);
+        }
+
+        @Override
+        public void onError(int errorCode, String errorMessage) {
+
+        }
+
+    };
 
 }

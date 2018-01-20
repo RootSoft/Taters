@@ -5,8 +5,12 @@ import com.rootsoft.taters.models.PeerNetwork;
 import com.rootsoft.taters.models.consensus.ProofOfWork;
 import com.rootsoft.taters.models.ConnectionCallback;
 import com.rootsoft.taters.models.node.Node;
+import com.rootsoft.taters.factories.NodeFactory;
+import com.rootsoft.taters.models.node.NodeType;
+import com.rootsoft.taters.models.node.implementations.NodeEventCallback;
+import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
 import com.rootsoft.taters.repositories.block.BlockListRepository;
-import com.rootsoft.taters.utils.NodeHelper;
+import net.tomp2p.peers.PeerAddress;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -39,8 +43,8 @@ public class TatersApplication {
         network = new PeerNetwork(connectionCallback);
 
         //Create our nodes
-        Node node = NodeHelper.createFullNode("Initial node");
-        Node second = NodeHelper.createFullNode("Second node");
+        Node node = NodeFactory.createNode("Initial node", NodeType.SPV);
+        //Node second = NodeHelper.createFullNode("Second node");
 
         //Let the new nodes join the network
         network.join(node);
