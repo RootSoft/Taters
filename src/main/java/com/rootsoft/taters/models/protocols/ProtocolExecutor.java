@@ -1,6 +1,8 @@
 package com.rootsoft.taters.models.protocols;
 
+import com.rootsoft.taters.models.node.Node;
 import com.rootsoft.taters.models.protocols.handlers.ProtocolHandler;
+import com.rootsoft.taters.models.protocols.handlers.VerackHandler;
 import com.rootsoft.taters.models.protocols.handlers.VersionHandler;
 import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
 
@@ -13,12 +15,12 @@ public class ProtocolExecutor {
 
     //Constructor
 
-    public ProtocolExecutor() {
-        buildChain();
+    public ProtocolExecutor(Node node) {
+        buildChain(node);
     }
 
-    private void buildChain() {
-        chain = new VersionHandler(null);
+    private void buildChain(Node node) {
+        chain = new VersionHandler(node, new VerackHandler(node, null));
     }
 
     public ProtocolMessage resolveProtocolRequest(ProtocolMessage message) {

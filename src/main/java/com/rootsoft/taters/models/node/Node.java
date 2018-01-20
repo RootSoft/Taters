@@ -54,7 +54,7 @@ public abstract class Node {
     public Node(String name, NodeEventCallback callback) {
         this.name = name;
         this.callback = callback;
-        this.executor = new ProtocolExecutor();
+        this.executor = new ProtocolExecutor(this);
 
         try {
             peer = new PeerBuilderDHT(new PeerBuilder(new Number160(RND)).ports(4001).start()).start();

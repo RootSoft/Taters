@@ -1,5 +1,6 @@
 package com.rootsoft.taters.models.protocols.handlers;
 
+import com.rootsoft.taters.models.node.Node;
 import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
 
 public abstract class ProtocolHandler {
@@ -8,10 +9,12 @@ public abstract class ProtocolHandler {
     public static final String TAG = ProtocolHandler.class.getSimpleName();
 
     //Attributes
+    protected Node node;
     private ProtocolHandler next;
 
     //Constructors
-    public ProtocolHandler(ProtocolHandler next) {
+    public ProtocolHandler(Node node, ProtocolHandler next) {
+        this.node = node;
         this.next = next;
     }
 

@@ -1,7 +1,9 @@
 package com.rootsoft.taters.models.protocols.handlers;
 
+import com.rootsoft.taters.models.node.Node;
 import com.rootsoft.taters.models.protocols.messages.ProtocolMessage;
 import com.rootsoft.taters.models.protocols.ProtocolType;
+import com.rootsoft.taters.models.protocols.messages.VerackMessage;
 import com.rootsoft.taters.models.protocols.messages.VersionMessage;
 
 public class VersionHandler extends ProtocolHandler {
@@ -14,8 +16,8 @@ public class VersionHandler extends ProtocolHandler {
 
     //Constructors
 
-    public VersionHandler(ProtocolHandler next) {
-        super(next);
+    public VersionHandler(Node node, ProtocolHandler next) {
+        super(node, next);
     }
 
     @Override
@@ -46,6 +48,8 @@ public class VersionHandler extends ProtocolHandler {
 
     private void handleResponse() {
         System.out.println("Received version: " + message.getVersionCode() + ", blockcount: " + message.getBlockCount() + " in initial node");
+        //TODO dispatch a VerackMessage to establish the connection
+        node.sendProtocolMessage(new VerackMessage(200));
     }
 
     @Override
