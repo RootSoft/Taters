@@ -29,13 +29,13 @@ public class BootstrapNode extends Node {
                 System.out.println("I'm bootstrapnode and I just got the message [" + message
                         + "] from " + sender.peerId());
                 ProtocolExecutor executor = new ProtocolExecutor();
-                return executor.resolveProtocolMessage(message);
+                return executor.resolveProtocolRequest(message);
             }
 
             @Override
             public void onResponseReceived(ProtocolMessage message) {
                 ProtocolExecutor executor = new ProtocolExecutor();
-                executor.resolveProtocolMessage(message);
+                executor.resolveProtocolResponse(message);
             }
 
             @Override
@@ -45,10 +45,6 @@ public class BootstrapNode extends Node {
 
         });
 
-    }
-
-    public BootstrapNode(String name, NodeEventCallback callback) {
-        super(name, callback);
     }
 
     //Methods

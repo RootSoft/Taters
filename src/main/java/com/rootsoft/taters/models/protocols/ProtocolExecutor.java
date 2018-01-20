@@ -21,8 +21,12 @@ public class ProtocolExecutor {
         chain = new VersionHandler(null);
     }
 
-    public ProtocolMessage resolveProtocolMessage(ProtocolMessage message) {
-        return chain.resolveProtocol(message);
+    public ProtocolMessage resolveProtocolRequest(ProtocolMessage message) {
+        return chain.resolveProtocolRequest(message);
+    }
+
+    public void resolveProtocolResponse(ProtocolMessage message) {
+        chain.resolveProtocolResponse(message);
     }
 
 }

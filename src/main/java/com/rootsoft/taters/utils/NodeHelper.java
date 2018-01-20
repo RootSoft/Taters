@@ -26,7 +26,7 @@ public class NodeHelper {
             @Override
             public void onResponseReceived(ProtocolMessage message) {
                 ProtocolExecutor executor = new ProtocolExecutor();
-                executor.resolveProtocolMessage(message);
+                executor.resolveProtocolResponse(message);
             }
 
             @Override

@@ -16,14 +16,20 @@ public abstract class ProtocolHandler {
     }
 
     //Methods
-    public ProtocolMessage resolveProtocol(ProtocolMessage message) {
+    public ProtocolMessage resolveProtocolRequest(ProtocolMessage message) {
         if (next != null) {
-            return next.resolveProtocol(message);
+            return next.resolveProtocolRequest(message);
         }
         return null;
     }
 
-    protected abstract void handleRequest();
+    public void resolveProtocolResponse(ProtocolMessage message) {
+        if (next != null) {
+            next.resolveProtocolResponse(message);
+        }
+    }
+
+    //Properties
 
     protected abstract ProtocolMessage response();
 

@@ -14,6 +14,7 @@ public abstract class ProtocolMessage implements Serializable {
 
     //Attributes
     private ProtocolType type;
+    private boolean resolved;
 
     //Constructors
     public ProtocolMessage(ProtocolType type) {
@@ -23,6 +24,14 @@ public abstract class ProtocolMessage implements Serializable {
     //Properties
     public ProtocolType getType() {
         return type;
+    }
+
+    public boolean isResolved() {
+        return resolved;
+    }
+
+    public void markResolved() {
+        this.resolved = true;
     }
 
 }

@@ -19,19 +19,33 @@ public class VersionHandler extends ProtocolHandler {
     }
 
     @Override
-    public ProtocolMessage resolveProtocol(ProtocolMessage message) {
+    public ProtocolMessage resolveProtocolRequest(ProtocolMessage message) {
         if (message.getType().equals(ProtocolType.VERSION)) {
             this.message = (VersionMessage) message;
             handleRequest();
             return response();
         }
 
-        return super.resolveProtocol(message);
+        return super.resolveProtocolRequest(message);
     }
 
     @Override
-    protected void handleRequest() {
-        System.out.println("Received version: " + message.getVersionCode() + ", blockcount: " + message.getBlockCount());
+    public void resolveProtocolResponse(ProtocolMessage message) {
+        if (message.getType().equals(ProtocolType.VERSION)) {
+            this.message = (VersionMessage) message;
+            handleResponse();
+            return;
+        }
+
+        super.resolveProtocolResponse(message);
+    }
+
+    private void handleRequest() {
+        System.out.println("Received version: " + message.getVersionCode() + ", blockcount: " + message.getBlockCount() + " in bootstrap node");
+    }
+
+    private void handleResponse() {
+        System.out.println("Received version: " + message.getVersionCode() + ", blockcount: " + message.getBlockCount() + " in initial node");
     }
 
     @Override
