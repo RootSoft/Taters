@@ -64,7 +64,7 @@ public class SPVNode extends Node {
 
         @Override
         public void onProtocolResponseReceived(Protocol message) {
-            Log.i("I'm SPV node and I just got the message [" + message
+            Log.i("I'm " + getName() + " and I just got the response [" + message.getType()
                     + "] from " + message.getSender().peerId());
 
             executor.resolveProtocolResponse(message);

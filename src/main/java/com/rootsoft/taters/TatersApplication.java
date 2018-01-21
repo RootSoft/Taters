@@ -12,6 +12,10 @@ import com.rootsoft.taters.repositories.block.BlockListRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 @SpringBootApplication
 public class TatersApplication {
 
@@ -34,6 +38,8 @@ public class TatersApplication {
 
 	public void boot() {
 
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
         //Create the blockchain
         blockchain = new Blockchain(new BlockListRepository(), new ProofOfWork(2));
 
@@ -42,11 +48,14 @@ public class TatersApplication {
 
         //Create our nodes
         Node node = NodeFactory.createNode("SPV node", NodeType.SPV);
-        Node second = NodeFactory.createNode("SPV node", NodeType.SPV);
+        Node second = NodeFactory.createNode("Remote node", NodeType.SPV);
 
         //Let the new nodes join the network
         network.join(node);
-        //network.join(second);
+
+        // then, when you want to schedule a task
+        Runnable task = () -> network.join(second);
+        executor.schedule(task, 5, TimeUnit.SECONDS);
 
     }
 

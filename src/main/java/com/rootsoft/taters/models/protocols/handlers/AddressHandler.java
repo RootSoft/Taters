@@ -44,7 +44,6 @@ public class AddressHandler extends ProtocolHandler {
     }
 
     private void handleResponse() {
-        Log.i("Initial node received addresses");
         for (NodeAddress address : protocol.getKnownPeers()) {
             Log.i("Address: " + address.toString());
         }

@@ -53,7 +53,7 @@ public class VersionHandler extends ProtocolHandler {
 
     private void handleResponse() {
         Log.i("Received version: " + protocol.getVersionCode() + ", blockcount: " + protocol.getBlockCount() + " in initial node");
-        node.sendProtocol(new VerackProtocol(true));
+        node.sendProtocol(new VerackProtocol(true, node.getName()));
     }
 
     @Override

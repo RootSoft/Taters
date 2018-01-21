@@ -52,7 +52,7 @@ public class BootstrapNode extends Node {
 
         @Override
         public Protocol onProtocolRequestReceived(Protocol message) {
-            Log.i("I'm bootstrapnode and I just got the message [" + message
+            Log.i("I'm " + getName() + " and I just got the request [" + message.getType()
                     + "] from " + message.getSender().peerId());
 
             return executor.resolveProtocolRequest(message);

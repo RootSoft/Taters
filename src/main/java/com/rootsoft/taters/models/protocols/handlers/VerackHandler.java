@@ -64,7 +64,7 @@ public class VerackHandler extends ProtocolHandler {
 
     @Override
     protected Protocol response() {
-        return new VerackProtocol(connected);
+        return new VerackProtocol(connected, node.getName());
     }
 
 }
