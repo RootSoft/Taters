@@ -1,6 +1,7 @@
 package com.rootsoft.taters.models.protocols.handlers;
 
 import com.rootsoft.taters.models.node.Node;
+import com.rootsoft.taters.models.node.NodeAddress;
 import com.rootsoft.taters.models.protocols.ProtocolType;
 import com.rootsoft.taters.models.protocols.messages.AddressProtocol;
 import com.rootsoft.taters.models.protocols.messages.GetAddressProtocol;
@@ -20,7 +21,7 @@ public class GetAddressHandler extends ProtocolHandler {
 
     //Attributes
     private GetAddressProtocol protocol;
-    private List<PeerAddress> knownPeers;
+    private List<NodeAddress> knownPeers;
 
     //Constructors
 
@@ -45,7 +46,13 @@ public class GetAddressHandler extends ProtocolHandler {
     }
 
     private void handleRequest() {
-        knownPeers.addAll(node.getKnownPeers());
+        for (PeerAddress peerAddress : node.getKnownPeers()) {
+            String peerId = peerAddress.peerId().toString();
+            String hostName = peerAddress.inetAddress().getHostName();
+            String address = peerAddress.inetAddress().getHostAddress();
+            int port = peerAddress.tcpPort();
+            knownPeers.add(new NodeAddress(peerId, hostName, address, port));
+        }
     }
 
     private void handleResponse() {

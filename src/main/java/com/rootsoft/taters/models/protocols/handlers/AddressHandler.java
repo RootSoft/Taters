@@ -1,6 +1,7 @@
 package com.rootsoft.taters.models.protocols.handlers;
 
 import com.rootsoft.taters.models.node.Node;
+import com.rootsoft.taters.models.node.NodeAddress;
 import com.rootsoft.taters.models.protocols.ProtocolType;
 import com.rootsoft.taters.models.protocols.messages.AddressProtocol;
 import com.rootsoft.taters.models.protocols.messages.GetAddressProtocol;
@@ -44,8 +45,8 @@ public class AddressHandler extends ProtocolHandler {
 
     private void handleResponse() {
         Log.i("Initial node received addresses");
-        for (PeerAddress address : protocol.getKnownPeers()) {
-            Log.i("Address: " + address.inetAddress().getHostAddress());
+        for (NodeAddress address : protocol.getKnownPeers()) {
+            Log.i("Address: " + address.toString());
         }
     }
 

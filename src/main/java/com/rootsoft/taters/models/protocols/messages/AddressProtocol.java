@@ -1,5 +1,6 @@
 package com.rootsoft.taters.models.protocols.messages;
 
+import com.rootsoft.taters.models.node.NodeAddress;
 import com.rootsoft.taters.models.protocols.ProtocolType;
 import net.tomp2p.peers.PeerAddress;
 
@@ -14,10 +15,10 @@ public class AddressProtocol extends Protocol {
     public static final String TAG = AddressProtocol.class.getSimpleName();
 
     //Attributes
-    private List<PeerAddress> knownPeers;
+    private List<NodeAddress> knownPeers;
 
     //Constructors
-    public AddressProtocol(List<PeerAddress> knownPeers) {
+    public AddressProtocol(List<NodeAddress> knownPeers) {
         super(ProtocolType.ADDR);
         this.knownPeers = knownPeers;
 
@@ -25,7 +26,7 @@ public class AddressProtocol extends Protocol {
 
     //Properties
 
-    public List<PeerAddress> getKnownPeers() {
+    public List<NodeAddress> getKnownPeers() {
         return knownPeers;
     }
 
