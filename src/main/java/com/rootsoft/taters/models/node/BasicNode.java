@@ -1,6 +1,7 @@
 package com.rootsoft.taters.models.node;
 
 import com.rootsoft.taters.models.node.implementations.NodeEventCallback;
+import com.rootsoft.taters.models.protocols.messages.Protocol;
 
 /**
  * Basic nodes are full blockchain nodes and contains the complete blockchain and network routing functions,
@@ -11,12 +12,9 @@ public class BasicNode extends Node {
     //Constants
     public static final String TAG = BasicNode.class.getSimpleName();
 
-    public BasicNode(String name) {
-        super(name);
-    }
-
-    public BasicNode(String name, NodeEventCallback callback) {
-        super(name, callback);
+    public BasicNode(String name, int port) {
+        super(name, port);
+        setNodeEventCallback(callback);
     }
 
     @Override
@@ -38,6 +36,30 @@ public class BasicNode extends Node {
     public boolean hasWallet() {
         return false;
     }
+
+    NodeEventCallback callback = new NodeEventCallback() {
+
+        @Override
+        public void onMessageSent(Protocol message) {
+
+        }
+
+        @Override
+        public Protocol onProtocolRequestReceived(Protocol message) {
+            return executor.resolveProtocolRequest(message);
+        }
+
+        @Override
+        public void onProtocolResponseReceived(Protocol message) {
+            executor.resolveProtocolResponse(message);
+        }
+
+        @Override
+        public void onError(int errorCode, String errorMessage) {
+
+        }
+
+    };
 
 
 }

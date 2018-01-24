@@ -58,10 +58,7 @@ public class PeerNetwork {
                 node.setPeerNetwork(PeerNetwork.this);
                 nodes.add(node);
 
-                //Send a protocol message Version that contains various fields
-                node.sendProtocol(new VersionProtocol(1, 0)); //TODO Get version code and blockcount
-
-                callback.onConnected(node);
+                callback.onConnected(node, bootstrapNode);
             }
         });
 

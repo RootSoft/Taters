@@ -19,6 +19,7 @@ public class ProtocolSerializer {
                         .registerSubtype(VersionProtocol.class)
                         .registerSubtype(VerackProtocol.class)
                         .registerSubtype(GetAddressProtocol.class)
+                        .registerSubtype(PingProtocol.class)
                         .registerSubtype(AddressProtocol.class);
 
         gson = new GsonBuilder()

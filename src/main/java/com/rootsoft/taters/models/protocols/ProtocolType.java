@@ -4,5 +4,6 @@ public enum ProtocolType {
     VERSION,
     VERACK,
     GET_ADDR,
-    ADDR
+    ADDR,
+    PING
 }

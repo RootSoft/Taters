@@ -1,5 +1,7 @@
 package com.rootsoft.taters;
 
+import com.rootsoft.taters.models.protocols.messages.PingProtocol;
+import com.rootsoft.taters.models.protocols.messages.VersionProtocol;
 import com.rootsoft.taters.utils.Log;
 import com.rootsoft.taters.models.Blockchain;
 import com.rootsoft.taters.models.PeerNetwork;
@@ -48,12 +50,13 @@ public class TatersApplication {
 
         //Create our nodes
         Node node = NodeFactory.createNode("SPV node", NodeType.SPV);
-        Node second = NodeFactory.createNode("Remote node", NodeType.SPV);
+        Node second = NodeFactory.createNode("Remote node", NodeType.FULL);
 
         //Let the new nodes join the network
         network.join(node);
+        //node.sendProtocol(new VersionProtocol(1, 12));
 
-        // then, when you want to schedule a task
+        //Join the network 5 seconds later
         Runnable task = () -> network.join(second);
         executor.schedule(task, 5, TimeUnit.SECONDS);
 
@@ -62,8 +65,9 @@ public class TatersApplication {
 	private static ConnectionCallback connectionCallback = new ConnectionCallback() {
 
         @Override
-        public void onConnected(Node node) {
-            Log.i("Peer " + node.getName() + " (" + node.getPeer().peerID() + ") joined the network.");
+        public void onConnected(Node node, Node bootstrap) {
+            //Send a protocol message Version that contains various fields
+            node.sendProtocol(bootstrap.getPeer().peerAddress(), new VersionProtocol(1, 0)); //TODO Get version code and blockcount
         }
 
         @Override

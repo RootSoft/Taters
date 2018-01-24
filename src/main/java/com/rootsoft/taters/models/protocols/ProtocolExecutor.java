@@ -22,10 +22,12 @@ public class ProtocolExecutor {
         ProtocolHandler verackHandler = new VerackHandler(node);
         ProtocolHandler getAddressHandler = new GetAddressHandler(node);
         ProtocolHandler addressHandler = new AddressHandler(node);
+        ProtocolHandler pingHandler = new PingHandler(node);
 
         versionHandler.setNextHandler(verackHandler);
         verackHandler.setNextHandler(getAddressHandler);
         getAddressHandler.setNextHandler(addressHandler);
+        addressHandler.setNextHandler(pingHandler);
 
         return versionHandler;
     }

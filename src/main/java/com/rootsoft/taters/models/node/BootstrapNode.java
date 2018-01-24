@@ -14,13 +14,9 @@ public class BootstrapNode extends Node {
     //Constants
     public static final String TAG = BootstrapNode.class.getSimpleName();
 
-    public BootstrapNode(String name) {
-        super(name);
+    public BootstrapNode(String name, int port) {
+        super(name, port);
         setNodeEventCallback(callback);
-    }
-
-    public BootstrapNode(String name, NodeEventCallback callback) {
-        super(name, callback);
     }
 
     @Override
@@ -52,9 +48,6 @@ public class BootstrapNode extends Node {
 
         @Override
         public Protocol onProtocolRequestReceived(Protocol message) {
-            Log.i("I'm " + getName() + " and I just got the request [" + message.getType()
-                    + "] from " + message.getSender().peerId());
-
             return executor.resolveProtocolRequest(message);
         }
 

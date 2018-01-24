@@ -1,5 +1,7 @@
 package com.rootsoft.taters.models.node;
 
+import net.tomp2p.peers.Number160;
+
 import java.io.Serializable;
 
 public class NodeAddress implements Serializable {
@@ -8,61 +10,72 @@ public class NodeAddress implements Serializable {
     public static final String TAG = NodeAddress.class.getSimpleName();
 
     //Attributes
-    private String peerId;
-    private String host;
-    private String address;
-    private int port;
+    private Number160 peerId;
+    private String hostName;
+    private String hostAddress;
+    private int tcpPort;
+    private int udpPort;
 
     //Constructors
-    public NodeAddress(String peerId, String host, String address, int port) {
+    public NodeAddress(Number160 peerId, String hostName, String address, int tcpPort, int udpPort) {
         this.peerId = peerId;
-        this.host = host;
-        this.address = address;
-        this.port = port;
+        this.hostName = hostName;
+        this.hostAddress = address;
+        this.tcpPort = tcpPort;
+        this.udpPort = udpPort;
     }
 
     //Properties
 
 
-    public String getPeerId() {
+    public Number160 getPeerId() {
         return peerId;
     }
 
-    public void setPeerId(String peerId) {
+    public void setPeerId(Number160 peerId) {
         this.peerId = peerId;
     }
 
-    public String getHost() {
-        return host;
+    public String getHostName() {
+        return hostName;
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
     }
 
-    public String getAddress() {
-        return address;
+    public String getHostAddress() {
+        return hostAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setHostAddress(String hostAddress) {
+        this.hostAddress = hostAddress;
     }
 
-    public int getPort() {
-        return port;
+    public int getTcpPort() {
+        return tcpPort;
     }
 
-    public void setPort(int port) {
-        this.port = port;
+    public void setTcpPort(int tcpPort) {
+        this.tcpPort = tcpPort;
+    }
+
+    public int getUdpPort() {
+        return udpPort;
+    }
+
+    public void setUdpPort(int udpPort) {
+        this.udpPort = udpPort;
     }
 
     @Override
     public String toString() {
         return "NodeAddress{" +
-                "peerId='" + peerId + '\'' +
-                ", host='" + host + '\'' +
-                ", address='" + address + '\'' +
-                ", port=" + port +
+                "peerId=" + peerId +
+                ", hostName='" + hostName + '\'' +
+                ", hostAddress='" + hostAddress + '\'' +
+                ", tcpPort=" + tcpPort +
+                ", udpPort=" + udpPort +
                 '}';
     }
 }

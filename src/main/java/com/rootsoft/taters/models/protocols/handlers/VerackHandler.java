@@ -48,6 +48,10 @@ public class VerackHandler extends ProtocolHandler {
         super.resolveProtocolResponse(protocol);
     }
 
+    /**
+     * Received the request from our client and we try to connect with the client.
+     * We respond with our connection status.
+     */
     private void handleRequest() {
         Log.i("Accepting connection request...");
 
@@ -55,10 +59,13 @@ public class VerackHandler extends ProtocolHandler {
         connected = node.connect(protocol.getSender());
     }
 
+    /**
+     * Received the response from our server node and we ask for their connections.
+     */
     private void handleResponse() {
         Log.i("Connection request was accepted: " + protocol.isConnected());
         if (protocol.isConnected()) {
-            node.sendProtocol(new GetAddressProtocol());
+            node.sendProtocol(protocol.getSender(), new GetAddressProtocol());
         }
     }
 

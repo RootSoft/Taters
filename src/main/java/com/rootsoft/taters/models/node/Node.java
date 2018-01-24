@@ -5,16 +5,19 @@ import com.rootsoft.taters.models.node.implementations.NodeEventCallback;
 import com.rootsoft.taters.models.protocols.ProtocolExecutor;
 import com.rootsoft.taters.models.protocols.ProtocolSerializer;
 import com.rootsoft.taters.models.protocols.messages.Protocol;
+import com.rootsoft.taters.utils.Log;
 import net.tomp2p.dht.*;
-import net.tomp2p.futures.BaseFutureAdapter;
-import net.tomp2p.futures.FutureBootstrap;
+import net.tomp2p.futures.*;
 import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.p2p.RequestP2PConfiguration;
 import net.tomp2p.peers.Number160;
+import net.tomp2p.peers.Number640;
 import net.tomp2p.peers.PeerAddress;
+import net.tomp2p.storage.Data;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Future;
 
 /**
  * https://tomp2p.net/doc/quick/
@@ -27,6 +30,7 @@ public abstract class Node {
 
     //Attributes
     private String name;
+    private int port;
     private boolean connected;
 
     private PeerNetwork peerNetwork;
@@ -43,8 +47,8 @@ public abstract class Node {
      * You can either set a random node ID, or you can create the node with a KeyPair, which takes a public key and
      * generates the ID (SHA-1) out of this key.
      */
-    public Node(String name) {
-        this(name, null);
+    public Node(String name, int port) {
+        this(name, port, null);
     }
 
     /**
@@ -53,14 +57,15 @@ public abstract class Node {
      * You can either set a random node ID, or you can create the node with a KeyPair, which takes a public key and
      * generates the ID (SHA-1) out of this key.
      */
-    public Node(String name, NodeEventCallback callback) {
+    public Node(String name, int port, NodeEventCallback callback) {
         this.name = name;
+        this.port = port;
         this.callback = callback;
         this.executor = new ProtocolExecutor(this);
         this.serializer = new ProtocolSerializer();
 
         try {
-            peer = new PeerBuilderDHT(new PeerBuilder(new Number160(RND)).ports(4001).start()).start();
+            peer = new PeerBuilderDHT(new PeerBuilder(new Number160(RND)).ports(port).start()).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,12 +79,17 @@ public abstract class Node {
             return;
 
         peer.peer().objectDataReply((sender, request) -> {
-            if (callback != null) {
-                Protocol protocol = serializer.deserialize((String) request);
-                protocol.setSender(sender);
-                return callback.onProtocolRequestReceived(protocol);
+            if (callback == null) {
+                return null;
             }
-            return null;
+
+            if (sender.equals(peer.peerAddress())) {
+                return null;
+            }
+
+            Protocol protocol = serializer.deserialize((String) request);
+            protocol.setSender(sender);
+            return callback.onProtocolRequestReceived(protocol);
         });
     }
 
@@ -87,13 +97,13 @@ public abstract class Node {
 
     /**
      * Sends a protocol message on the network.
+     * Everyone can respond
      *
      * @param protocol The protocol to be sent.
      */
     public void sendProtocol(Protocol protocol) {
-        FutureSend futureSend = peer.send(Number160.createHash("key"))
+        FutureSend futureSend = peer.send(new Number160(new Random(42L)))
                 .object(serializer.serialize(protocol))
-                .requestP2PConfiguration(new RequestP2PConfiguration(1, 5, 0))
                 .start();
 
         futureSend.addListener(new BaseFutureAdapter<FutureSend>() {
@@ -109,15 +119,57 @@ public abstract class Node {
                     callback.onError(400, "Unable to send message");
                 }
 
-                for (Map.Entry<PeerAddress, Object> entry : futureSend.rawDirectData2().entrySet()) {
-                    Protocol response = (Protocol) entry.getValue();
-                    response.setSender(entry.getKey());
-                    callback.onProtocolResponseReceived(response);
+                for (Map.Entry<PeerAddress, Object> entry : future.rawDirectData2().entrySet()) {
+                    if (!entry.getKey().equals(peer.peerAddress())) {
+                        Protocol response = (Protocol) entry.getValue();
+                        response.setSender(entry.getKey());
+                        callback.onProtocolResponseReceived(response);
+                    }
                 }
-
             }
         });
 
+    }
+
+    /**
+     * Send a direct protocol message to the given peer
+     * @param address
+     * @param protocol
+     */
+    public void sendProtocol(PeerAddress address, Protocol protocol) {
+        FutureDirect futureDirect = peer.peer()
+                .sendDirect(address)
+                .object(serializer.serialize(protocol))
+                .start();
+
+        futureDirect.addListener(new BaseFutureAdapter<FutureDirect>() {
+
+            @Override
+            public void operationComplete(FutureDirect response) throws Exception {
+                if (callback == null) {
+                    return;
+                }
+
+                if (!response.isCompleted()) {
+                    callback.onError(400, "Unable to send message");
+                }
+
+                Protocol message = (Protocol) response.object();
+                message.setSender(address);
+                callback.onProtocolResponseReceived(message);
+            }
+        });
+
+    }
+
+    public void broadcast(Protocol protocol) {
+        try {
+            NavigableMap<Number640, Data> dataMap = new TreeMap<>();
+            dataMap.put(Number640.ZERO, new Data(protocol));
+            peer.peer().broadcast(new Number160(new Random(42L))).dataMap(dataMap).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -9,7 +9,7 @@ public interface ConnectionCallback {
     /**
      * A new node has connected to the network.
      */
-    void onConnected(Node peer);
+    void onConnected(Node peer, Node bootstrap);
 
     /**
      * A node has disconnected from the network

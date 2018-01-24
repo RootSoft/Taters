@@ -3,6 +3,7 @@ package com.rootsoft.taters.models.node;
 import com.rootsoft.taters.utils.Log;
 import com.rootsoft.taters.models.node.implementations.NodeEventCallback;
 import com.rootsoft.taters.models.protocols.messages.Protocol;
+import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 
 /**
@@ -19,13 +20,9 @@ public class SPVNode extends Node {
     //Attributes
 
     //Constructors
-    public SPVNode(String name) {
-        super(name);
+    public SPVNode(String name, int port) {
+        super(name, port);
         setNodeEventCallback(callback);
-    }
-
-    public SPVNode(String name, NodeEventCallback callback) {
-        super(name, callback);
     }
 
     @Override
@@ -64,9 +61,6 @@ public class SPVNode extends Node {
 
         @Override
         public void onProtocolResponseReceived(Protocol message) {
-            Log.i("I'm " + getName() + " and I just got the response [" + message.getType()
-                    + "] from " + message.getSender().peerId());
-
             executor.resolveProtocolResponse(message);
         }
 

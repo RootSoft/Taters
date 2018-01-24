@@ -9,6 +9,7 @@ import com.rootsoft.taters.models.protocols.messages.Protocol;
 import com.rootsoft.taters.models.protocols.messages.VerackProtocol;
 import com.rootsoft.taters.utils.Log;
 import net.tomp2p.p2p.Peer;
+import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 
 import java.util.ArrayList;
@@ -45,14 +46,22 @@ public class GetAddressHandler extends ProtocolHandler {
         return super.resolveProtocolRequest(protocol);
     }
 
+    /**
+     * Received the request from the client,
+     * map all our known peers to a list and send it back
+     */
     private void handleRequest() {
+        knownPeers = new ArrayList<>();
         for (PeerAddress peerAddress : node.getKnownPeers()) {
-            String peerId = peerAddress.peerId().toString();
+            Number160 peerId = peerAddress.peerId();
             String hostName = peerAddress.inetAddress().getHostName();
-            String address = peerAddress.inetAddress().getHostAddress();
-            int port = peerAddress.tcpPort();
-            knownPeers.add(new NodeAddress(peerId, hostName, address, port));
+            String hostAddress = peerAddress.inetAddress().getHostAddress();
+            int tcpPort = peerAddress.tcpPort();
+            int udpPort = peerAddress.udpPort();
+            knownPeers.add(new NodeAddress(peerId, hostName, hostAddress, tcpPort, udpPort));
         }
+
+        Log.i(node.getName() + " knows : " + knownPeers.size() + " peers.");
     }
 
     private void handleResponse() {
@@ -60,6 +69,10 @@ public class GetAddressHandler extends ProtocolHandler {
 
     @Override
     protected Protocol response() {
+        //Log.i(node.getName() + " known peers: " + knownPeers.size());
+//        for (NodeAddress address : knownPeers) {
+//            Log.i("Address: " + address);
+//        }
         return new AddressProtocol(knownPeers);
     }
 

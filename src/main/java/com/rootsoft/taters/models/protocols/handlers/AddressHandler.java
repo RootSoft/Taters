@@ -3,16 +3,16 @@ package com.rootsoft.taters.models.protocols.handlers;
 import com.rootsoft.taters.models.node.Node;
 import com.rootsoft.taters.models.node.NodeAddress;
 import com.rootsoft.taters.models.protocols.ProtocolType;
-import com.rootsoft.taters.models.protocols.messages.AddressProtocol;
-import com.rootsoft.taters.models.protocols.messages.GetAddressProtocol;
-import com.rootsoft.taters.models.protocols.messages.Protocol;
-import com.rootsoft.taters.models.protocols.messages.VerackProtocol;
+import com.rootsoft.taters.models.protocols.messages.*;
 import com.rootsoft.taters.utils.Log;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.peers.PeerAddress;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AddressHandler extends ProtocolHandler {
 
@@ -43,10 +43,31 @@ public class AddressHandler extends ProtocolHandler {
         super.resolveProtocolResponse(protocol);
     }
 
+    /**
+     * We received the known peers from our host, we try to connect to them and send a ping to them.
+     */
     private void handleResponse() {
-        for (NodeAddress address : protocol.getKnownPeers()) {
-            Log.i("Address: " + address.toString());
+
+        //Filter own peerId from the list
+        List<NodeAddress> result = protocol.getKnownPeers().stream()
+                .filter(line -> !line.getPeerId().equals(node.getPeer().peerID()))
+                .collect(Collectors.toList());
+
+        Log.i(node.getName() + " received peers: ");
+
+        for (NodeAddress address : result) {
+            Log.i("Address: " + address);
+            boolean connected = false;
+            try {
+                PeerAddress peer = new PeerAddress(address.getPeerId(), InetAddress.getByName(address.getHostAddress()), address.getTcpPort(), address.getUdpPort());
+                connected = node.connect(peer);
+                if (connected)
+                    node.sendProtocol(peer, new PingProtocol("Ping"));
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
     @Override

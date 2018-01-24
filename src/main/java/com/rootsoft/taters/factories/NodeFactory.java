@@ -14,17 +14,17 @@ public class NodeFactory {
 
         switch (type) {
             case BASIC:
-                return new BasicNode(name);
+                return new BasicNode(name, 4001);
             case BOOTSTRAP:
-                return new BootstrapNode(name);
+                return new BootstrapNode(name, 4002);
             case SOLO_MINER:
-                return new BasicNode(name);
+                return new BasicNode(name, 4003);
             case SPV:
-                return new SPVNode(name);
+                return new SPVNode(name, 4004);
             case FULL:
-                return new BasicNode(name);
+                return new BasicNode(name, 4005);
             default:
-                return new BasicNode(name);
+                return new BasicNode(name, 4000);
         }
     }
 
